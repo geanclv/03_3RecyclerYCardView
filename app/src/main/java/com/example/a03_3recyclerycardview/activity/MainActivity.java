@@ -1,21 +1,25 @@
-package com.example.a03_3recyclerycardview;
+package com.example.a03_3recyclerycardview.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.a03_3recyclerycardview.adapter.MyAdapter;
+import com.example.a03_3recyclerycardview.model.Pelicula;
+import com.example.a03_3recyclerycardview.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private List<String> lstNombre;
+    private List<Pelicula> lstPelicula;
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
@@ -30,17 +34,18 @@ public class MainActivity extends AppCompatActivity {
 
         //4. Inicializando controles básicos
         initControls();
-        initLstNombre();
+        initLstPelicula();
 
         //5. Inicializando el layoutManager
-        layoutManager = new GridLayoutManager(this, 2);
+        layoutManager = new LinearLayoutManager(this);
+//        layoutManager = new GridLayoutManager(this, 2);
 
         //6. Inicializando el adaptador
-        adapter = new MyAdapter(lstNombre, R.layout.recycler_view_item,
+        adapter = new MyAdapter(MainActivity.this, lstPelicula, R.layout.recycler_view_item,
                 new MyAdapter.OnItemClickListener() {
                     @Override
-                    public void onItemClick(String nombre, int posicion) {
-                        eliminarNombre(posicion);
+                    public void onItemClick(Pelicula pelicula, int posicion) {
+                        eliminarPelicula(posicion);
                     }
                 });
 
@@ -64,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_nombre:
-                this.agregarNombre(0);
+                this.agregarPelicula(0);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -72,25 +77,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //2. Operaciones básicas
-    private void agregarNombre(int posicion) {
-        lstNombre.add(posicion, "Nombre " + (++contador));
+    private void agregarPelicula(int posicion) {
+        lstPelicula.add(posicion,
+                new Pelicula("Pelicula " + (++contador), R.drawable.spiderman));
         adapter.notifyItemInserted(posicion);
         layoutManager.scrollToPosition(posicion);
     }
 
-    private void eliminarNombre(int posicion) {
-        lstNombre.remove(posicion);
+    private void eliminarPelicula(int posicion) {
+        lstPelicula.remove(posicion);
         adapter.notifyItemRemoved(posicion);
     }
 
     //1. Inicializaciones básicas
-    private void initLstNombre() {
-        lstNombre = new ArrayList<String>() {{
-            add("Gean");
-            add("Carlo");
-            add("Pepe");
-            add("Jose");
-            add("Luis");
+    private void initLstPelicula() {
+        lstPelicula = new ArrayList<Pelicula>() {{
+            add(new Pelicula("Pokemon", R.drawable.pokemon));
+            add(new Pelicula("Casa de papel", R.drawable.casapapel));
+            add(new Pelicula("John Wick", R.drawable.jon));
+            add(new Pelicula("Spiderman", R.drawable.spiderman));
         }};
     }
 
